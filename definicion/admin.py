@@ -9,9 +9,9 @@ class CustomProyecto(Proyecto):
     add_form = ProyectoCreationForm
     form = ProyectoChangeForm
     model = Proyecto
-    list_display = ['nombre', 'fecha_inicio', 'fecha_fin', 'miembros', 'descripcion_breve', 'descripcion_detallada', 'estado']
+    list_display = ['nombre', 'inicio', 'fin', 'miembros', 'descripcion_breve', 'descripcion_detallada', 'estado']
 
     fieldsets = (
-        (None, {'fields': ('nombre', 'fecha_inicio', 'fecha_fin', 'miembros', 'descripcion_breve', 'descripcion_detallada', 'estado')}),)
+        (None, {'fields': ('nombre', 'inicio', 'fin', 'miembros', 'descripcion_breve', 'descripcion_detallada', 'estado')}),)
 
 admin.site.register(CustomProyecto)

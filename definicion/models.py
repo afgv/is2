@@ -22,20 +22,17 @@ class Proyecto(models.Model):
 
     """
     nombre=models.CharField(max_length=20, default='', null=False)
-    fecha_inicio=models.DateField()
-    fecha_fin=models.DateField()
+    inicio=models.DateField()
+    fin=models.DateField()
     descripcion_breve=models.CharField(max_length=100)
     descripcion_detallada=models.TextField(max_length=500)
     creacion = models.DateTimeField(default=timezone.now)
     duracion_sprint = models.PositiveIntegerField(default=30)
-    #equipo = models.ManyToManyField(CustomUser, through='MiembroEquipo')
+    equipo = models.ManyToManyField(CustomUser, through='MiembroEquipo')
 
-    TIPOS_ESTADOS = (
-        ('to_do', 'En Planificacion'),
-        ('doing', 'En Ejecucion'),
-        ('done', 'Hecho'),
-    )
-    estado=models.CharField(max_length=5, choices=TIPOS_ESTADOS, default='to_do')
+    estado_choices = (
+        ('EP', 'En Produccion'), ('CO', 'Completado'), ('AP', 'Aprobado'), ('CA', 'Cancelado'), ('IN', 'Inactivo'))
+    estado = models.CharField(choices=estado_choices, max_length=2, default='IN')
 
     class Meta:
         # Los permisos estaran asociados a los proyectos, por lo que todos los permisos de ABM de las entidades
@@ -97,7 +94,7 @@ class Proyecto(models.Model):
         except TypeError:
             pass  # si una de las fechas es null, clean_field() se encarga de lanzar error
 
-class MiembroEquipo():
+class MiembroEquipo(models.Model):
     """
     Miembros del equipo de un proyecto con un rol específico
     """

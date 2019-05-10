@@ -5,7 +5,7 @@ from guardian.mixins import PermissionRequiredMixin
 from definicion.models import Proyecto
 from django.urls import reverse_lazy
 from django.views import generic
-from .forms import ProyectoCreationForm
+from definicion.forms import ProyectoCreationForm
 from django.shortcuts import render
 from django.http.response import HttpResponseRedirect
 from django.contrib.auth import login

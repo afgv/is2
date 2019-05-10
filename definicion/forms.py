@@ -28,7 +28,7 @@ def __general_perms_list__():
     return permlist
 
 def __user_and_group_permissions__():
-    perms_user_list = [(perm.codename, perm.name) for perm in get_perms_for_model(CustomUser)]
+    perms_user_list = [(perm.codename, perm.name) for perm in get_perms_for_model(User)]
     perms_group_list = [(perm.codename, perm.name) for perm in get_perms_for_model(Group)]
     perms = []
     perms.extend(perms_user_list)
@@ -87,13 +87,13 @@ class ProyectoCreationForm(forms.ModelForm):
 
   class Meta:
         model = Proyecto
-        fields = ['nombre', 'fecha_inicio', 'fecha_fin', 'descripcion_breve', 'descripcion_detallada', 'estado']
+        fields = ['nombre', 'inicio', 'fin', 'descripcion_breve', 'descripcion_detallada', 'estado']
 
 class ProyectoChangeForm(forms.ModelForm):
 
     class Meta:
         model = Proyecto
-        fields = ['nombre', 'fecha_inicio', 'fecha_fin', 'descripcion_breve', 'descripcion_detallada', 'estado']
+        fields = ['nombre', 'inicio', 'fin', 'descripcion_breve', 'descripcion_detallada', 'estado']
 
 class FlujosCreateForm(forms.ModelForm):
     """
@@ -203,7 +203,7 @@ class FileUploadForm(forms.ModelForm):
         fields = ['nombre', 'descripcion']
 
 
-class RegistrarActividadForm(forms.ModelForm):
+class RegistrarFaseForm(forms.ModelForm):
     '''
     Formulario para registrar actividad en un User Story
     '''

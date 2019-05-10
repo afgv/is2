@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
-from django.core.urlresolvers import reverse_lazy
-from django.forms import CheckboxSelectMultiple
+from django.forms import CheckboxSelectMultiple, SelectDateWidget
 from django.forms import inlineformset_factory
-from django.forms.extras import SelectDateWidget
 from django.forms.models import modelform_factory
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404
 from django.template import RequestContext
 from django.template.loader import render_to_string
+from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic import DetailView
 from django.views.generic import detail
@@ -18,11 +17,11 @@ from django.views.generic.detail import SingleObjectTemplateResponseMixin
 from guardian.mixins import LoginRequiredMixin
 from guardian.shortcuts import remove_perm
 from guardian.shortcuts import get_perms
-from project.forms import MiembrosEquipoFormset
-from project.models import Proyecto
-from project.models import MiembroEquipo
-from project.views import GlobalPermissionRequiredMixin, ActiveProjectRequiredMixin
-from project.views import CreateViewPermissionRequiredMixin
+from definicion.forms import MiembrosEquipoFormset
+from definicion.models import Proyecto
+from definicion.models import MiembroEquipo
+from definicion.views import GlobalPermissionRequiredMixin, ActiveProjectRequiredMixin
+from definicion.views import CreateViewPermissionRequiredMixin
 
 
 class ProjectList(LoginRequiredMixin, ListView):
@@ -60,7 +59,6 @@ class ProjectDetail(LoginRequiredMixin, GlobalPermissionRequiredMixin, DetailVie
         context['team'] = self.object.miembroequipo_set.all()
         context['flows'] = self.object.flujo_set.all()
         context['sprints'] = self.object.sprint_set.all()
-        context['total_us'] = self.object.userstory_set.all().count()
         context['approved_us'] = self.object.userstory_set.filter(estado=3).count()
         context['active_us'] = self.object.userstory_set.filter(estado=1).count()
         context['pending_us'] = self.object.userstory_set.filter(estado=2).count()
@@ -76,12 +74,12 @@ class ProjectCreate(LoginRequiredMixin, CreateViewPermissionRequiredMixin, gener
     permission_required = 'project.add_proyecto'
     form_class = modelform_factory(Proyecto,
                                    widgets={'inicio': SelectDateWidget, 'fin': SelectDateWidget},
-                                   fields=('nombre_corto', 'nombre_largo', 'inicio', 'fin', 'duracion_sprint',
-                                           'descripcion'),)
-    template_name = 'project/proyecto/project_form.html'
+                                   fields=('nombre', 'inicio', 'fin', 'duracion_sprint',
+                                           'descripcion_breve', 'descripcion_detallada'),)
+    template_name = 'project/proyecto/project_create.html'
     TeamMemberInlineFormSet = inlineformset_factory(Proyecto, MiembroEquipo, formset=MiembrosEquipoFormset, can_delete=True,
                                                     fields=['usuario', 'roles'],
-                                                    extra=1,
+                                                    extra=3,
                                                     widgets={'roles': CheckboxSelectMultiple})
 
     def get_context_data(self, **kwargs):
@@ -120,8 +118,8 @@ class ProjectUpdate(ActiveProjectRequiredMixin, LoginRequiredMixin, GlobalPermis
                                                     widgets={'roles': CheckboxSelectMultiple})
     form_class = modelform_factory(Proyecto,
                                    widgets={'inicio': SelectDateWidget, 'fin': SelectDateWidget},
-                                   fields=('nombre_corto', 'nombre_largo', 'inicio', 'fin', 'duracion_sprint',
-                                           'descripcion'),
+                                   fields=('nombre', 'inicio', 'fin', 'duracion_sprint',
+                                           'descripcion_breve','descripcion_detallada'),
                                    )
 
     def get_proyecto(self):
